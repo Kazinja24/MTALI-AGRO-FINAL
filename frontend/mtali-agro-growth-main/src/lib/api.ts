@@ -1,4 +1,7 @@
-export const API_BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+export const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  import.meta.env.VITE_API_URL ||
+  "http://127.0.0.1:8000";
 
 export type BackendUser = {
   id: string;
@@ -404,5 +407,16 @@ export async function submitContactMessage(payload: ContactMessagePayload): Prom
 }
 
 export async function logoutUser(): Promise<void> {
+  const refresh = getRefreshToken();
+  if (refresh) {
+    try {
+      await apiFetch<void>("/api/v1/auth/logout/", {
+        method: "POST",
+        body: { refresh },
+      });
+    } catch {
+      // Best effort logout: always clear local tokens even if revocation fails.
+    }
+  }
   clearAccessToken();
 }

@@ -155,7 +155,7 @@ Mirror Supabase RLS:
 
 Frontend will add:
 1. `src/integrations/api/client.ts` — fetch wrapper:
-   - Reads `VITE_API_BASE_URL`
+   - Reads `VITE_API_BASE_URL` and falls back to `VITE_API_URL`
    - Attaches `Authorization: Bearer <access>` from localStorage
    - Auto-refresh on 401 via `/auth/refresh/`
 2. Updated callers:
@@ -186,8 +186,10 @@ Frontend will add:
 
 ## 9. CORS & Security
 
+- Use `config.settings.development` locally and `config.settings.production` on Railway.
 - `CORS_ALLOWED_ORIGINS`: preview URL, custom domain, `localhost:5173`
-- `CSRF_TRUSTED_ORIGINS`: same
+- `CSRF_TRUSTED_ORIGINS`: same exact origins, including the full `https://<preview>.vercel.app` URL
+- `ALLOWED_HOSTS`: Railway backend host plus any custom API domain
 - `SECURE_SSL_REDIRECT=True` in prod
 - DRF throttling: `AnonRateThrottle 60/min`, `UserRateThrottle 1000/hr`
 - Stricter on `/auth/login` and `/inquiries/contact` (~5/min)
@@ -218,6 +220,20 @@ CONTACT_NOTIFY_EMAIL=martinernest107@gmail.com
 **Frontend `.env`:**
 ```
 VITE_API_BASE_URL=https://api.mtaliagro.co.tz/api/v1
+```
+
+For preview deploys, use the exact frontend origin in the backend env:
+```
+CORS_ALLOWED_ORIGINS=https://mtaliagro.co.tz,https://<preview>.vercel.app
+CSRF_TRUSTED_ORIGINS=https://mtaliagro.co.tz,https://<preview>.vercel.app
+ALLOWED_HOSTS=api.mtaliagro.co.tz
+DJANGO_DEBUG=False
+DATABASE_URL=postgres://...
+```
+
+Recommended Railway start command:
+```
+gunicorn config.wsgi:application
 ```
 
 ---

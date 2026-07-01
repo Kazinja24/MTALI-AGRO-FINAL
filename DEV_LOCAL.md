@@ -32,6 +32,6 @@ Stop the running process by closing/interrupting the terminal (Ctrl+C).
 
 ## Notes
 
-- The script sets `VITE_API_URL=http://127.0.0.1:8000` for the frontend automatically.
+- The script sets `VITE_API_BASE_URL=http://127.0.0.1:8000` for the frontend automatically.
 - Django is started with:
   - `python backend/manage.py runserver 127.0.0.1:8000`

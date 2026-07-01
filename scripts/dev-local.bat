@@ -21,7 +21,7 @@ set FRONTEND_DIR=%ROOT_DIR%\frontend\mtali-agro-growth-main
 
 set PYTHON_EXE=%BACKEND_DIR%\venv\Scripts\python.exe
 
-set VITE_API_URL=http://127.0.0.1:8000
+set VITE_API_BASE_URL=http://127.0.0.1:8000
 
 echo [dev-local] Root: %ROOT_DIR%
 
@@ -39,7 +39,7 @@ start "mtali-agro-backend" /b cmd /c "cd /d %BACKEND_DIR% && ^"%PYTHON_EXE%^" ma
 set BACKEND_PID=!errorlevel!
 
 REM Start frontend in background
-start "mtali-agro-frontend" /b cmd /c "cd /d %FRONTEND_DIR% && set VITE_API_URL=%VITE_API_URL% && npm run dev -- --host 127.0.0.1 --port 5173"
+start "mtali-agro-frontend" /b cmd /c "cd /d %FRONTEND_DIR% && set VITE_API_BASE_URL=%VITE_API_BASE_URL% && npm run dev -- --host 127.0.0.1 --port 5173"
 set FRONTEND_PID=!errorlevel!
 
 echo.

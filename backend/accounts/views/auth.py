@@ -1,5 +1,6 @@
 from accounts.serializers.auth import (
     LoginSerializer,
+    LogoutSerializer,
     RegisterSerializer,
     UserSerializer,
 )
@@ -8,12 +9,15 @@ from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.throttling import ScopedRateThrottle
 from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class RegisterView(APIView):
     permission_classes = []
     authentication_classes = []
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "auth"
 
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
@@ -37,6 +41,8 @@ class RegisterView(APIView):
 class LoginView(APIView):
     permission_classes = []
     authentication_classes = []
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "auth"
 
     def post(self, request):
         serializer = LoginSerializer(data=request.data, context={"request": request})
@@ -67,6 +73,19 @@ class MeView(APIView):
         serializer = UserSerializer(request.user)
 
         return Response(serializer.data)
+
+
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = LogoutSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        refresh = RefreshToken(serializer.validated_data["refresh"])
+        refresh.blacklist()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class AdminUserListView(generics.ListAPIView):

@@ -1,6 +1,6 @@
-from .base import *
+from .base import *  # noqa: F401,F403
 
-try:
-    from .development import *
-except ImportError:
-    pass
+if DEBUG:
+    from .development import *  # noqa: F401,F403
+else:
+    from .production import *  # noqa: F401,F403

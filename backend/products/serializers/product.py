@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from products.models import Product
 from crops.models import Crop
+from common.validators import validate_uploaded_image
 
 
 class CropSerializer(serializers.ModelSerializer):
@@ -104,6 +105,9 @@ class ProductCreateUpdateSerializer(serializers.ModelSerializer):
             )
 
         return value
+
+    def validate_image(self, value):
+        return validate_uploaded_image(value)
 
     def to_representation(self, instance):
         return ProductSerializer(instance, context=self.context).data

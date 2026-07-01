@@ -18,11 +18,14 @@ from common.permissions import IsAdmin
 
 from django.core.mail import send_mail
 from django.conf import settings
+from rest_framework.throttling import ScopedRateThrottle
 
 
 class ContactMessageCreateView(generics.CreateAPIView):
     serializer_class = ContactMessageSerializer
     permission_classes = [AllowAny]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "contact"
 
     def perform_create(self, serializer):
         inquiry = serializer.save()
@@ -30,10 +33,8 @@ class ContactMessageCreateView(generics.CreateAPIView):
         send_mail(
             subject=f'New Contact Inquiry: {inquiry.subject}',
             message=inquiry.message,
-            from_email=inquiry.email,
-            recipient_list=[
-                'azamabubaka511@gmail.com'
-            ],
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[settings.CONTACT_NOTIFY_EMAIL],
             fail_silently=True,
         )
         
@@ -41,6 +42,8 @@ class ContactMessageCreateView(generics.CreateAPIView):
 class ProductInquiryCreateView(generics.CreateAPIView):
     serializer_class = ProductInquirySerializer
     permission_classes = [AllowAny]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "contact"
 
 
 class AdminContactMessageListView(generics.ListAPIView):

@@ -1,8 +1,10 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 from autoslug import AutoSlugField
 
-from common.models import BaseModel
 from accounts.models import User
+from common.models import BaseModel
+from common.text import sanitize_text
 
 
 class BlogCategory(models.TextChoices):
@@ -73,6 +75,34 @@ class Post(BaseModel):
 
     class Meta:
         ordering = ['-published_at']
+
+    def clean(self):
+        self.title_en = sanitize_text(
+            self.title_en,
+            collapse_whitespace=True,
+            allow_blank=False,
+        ) or ""
+        if not self.title_en:
+            raise ValidationError({"title_en": "Title cannot be empty after sanitization."})
+
+        self.title_sw = sanitize_text(
+            self.title_sw,
+            collapse_whitespace=True,
+        )
+        self.excerpt_en = sanitize_text(self.excerpt_en)
+        self.excerpt_sw = sanitize_text(self.excerpt_sw)
+        self.body_en = sanitize_text(
+            self.body_en,
+            allow_blank=False,
+        ) or ""
+        if not self.body_en:
+            raise ValidationError({"body_en": "Body cannot be empty after sanitization."})
+
+        self.body_sw = sanitize_text(self.body_sw)
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title_en

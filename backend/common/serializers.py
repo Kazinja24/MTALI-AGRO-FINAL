@@ -1,4 +1,5 @@
 from common.models import MediaAsset, SiteSetting, VisitCount
+from common.validators import validate_uploaded_image
 from rest_framework import serializers
 
 
@@ -17,6 +18,9 @@ class MediaAssetSerializer(serializers.ModelSerializer):
                 return request.build_absolute_uri(obj.file.url)
             return obj.file.url
         return None
+
+    def validate_file(self, value):
+        return validate_uploaded_image(value)
 
 
 class SiteSettingSerializer(serializers.ModelSerializer):
