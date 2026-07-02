@@ -5,11 +5,9 @@ import {
   createRootRouteWithContext,
   useRouter,
   HeadContent,
-  Scripts,
 } from "@tanstack/react-router";
 
 import { I18nProvider } from "@/lib/i18n";
-import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
   return (
@@ -73,46 +71,33 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Mtali Agro Traders — Premium Fertilizers for Tanzania" },
-      { name: "description", content: "Premium foliar and water-soluble fertilizers helping farmers across Tanzania grow healthier crops and earn more from every harvest." },
+      { title: "Mtali Agro Traders - Premium Fertilizers for Tanzania" },
+      {
+        name: "description",
+        content:
+          "Premium foliar and water-soluble fertilizers helping farmers across Tanzania grow healthier crops and earn more from every harvest.",
+      },
       { name: "author", content: "Mtali Agro Traders Company" },
-      { property: "og:title", content: "Mtali Agro Traders — Premium Fertilizers for Tanzania" },
-      { property: "og:description", content: "Foliar & water-soluble fertilizers for maize, tomato, coffee and beans across Tanzania." },
+      { property: "og:title", content: "Mtali Agro Traders - Premium Fertilizers for Tanzania" },
+      {
+        property: "og:description",
+        content: "Foliar and water-soluble fertilizers for maize, tomato, coffee and beans across Tanzania.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
-    links: [
-      { rel: "stylesheet", href: appCss },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght,SOFT@9..144,300..600,0..100&family=JetBrains+Mono:wght@400;500&display=swap" },
-    ],
   }),
-  shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
   errorComponent: ErrorComponent,
 });
-
-function RootShell({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  );
-}
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   return (
     <QueryClientProvider client={queryClient}>
+      <HeadContent />
       <I18nProvider>
         <Outlet />
       </I18nProvider>
