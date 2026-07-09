@@ -1,0 +1,12 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "cd frontend/mtali-agro-growth-main && npm ci",
+  "buildCommand": "cd frontend/mtali-agro-growth-main && npm run build",
+  "outputDirectory": "frontend/mtali-agro-growth-main/dist",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
