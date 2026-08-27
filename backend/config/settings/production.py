@@ -30,3 +30,17 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
+
+# If Cloudinary credentials are provided, use Cloudinary for media storage.
+if env("CLOUDINARY_URL", default="") or (
+    env("CLOUDINARY_CLOUD_NAME", default="")
+    and env("CLOUDINARY_API_KEY", default="")
+    and env("CLOUDINARY_API_SECRET", default="")
+):
+    CLOUDINARY_STORAGE = {
+        "CLOUD_NAME": env("CLOUDINARY_CLOUD_NAME", default=""),
+        "API_KEY": env("CLOUDINARY_API_KEY", default=""),
+        "API_SECRET": env("CLOUDINARY_API_SECRET", default=""),
+    }
+    # Use django-cloudinary-storage's default media storage
+    DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
