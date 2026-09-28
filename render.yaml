@@ -6,8 +6,8 @@ services:
     region: oregon
     # Ensure commands run from the backend directory so requirements are found
     buildCommand: cd backend && pip install -r requirements.txt
-    # Use gunicorn --chdir to ensure the Django project folder is on Python path
-    startCommand: gunicorn --chdir backend config.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --threads 4
+    # Apply database migrations before starting the Django application.
+    startCommand: cd backend && python manage.py migrate --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --threads 4
     envVars:
       - key: DJANGO_SECRET_KEY
         value: ""
