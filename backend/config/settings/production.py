@@ -2,7 +2,12 @@ from .base import *  # noqa: F401,F403
 
 DEBUG = False
 
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
+# Render sends requests with this hostname.  Set ALLOWED_HOSTS in the service
+# environment to replace this default when adding a custom domain.
+ALLOWED_HOSTS = env.list(
+    "ALLOWED_HOSTS",
+    default=["mtali-agro-final.onrender.com"],
+)
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default=[])
 CORS_ALLOWED_ORIGIN_REGEXES = env.list("CORS_ALLOWED_ORIGIN_REGEXES", default=[])

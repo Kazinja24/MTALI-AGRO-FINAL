@@ -32,7 +32,7 @@ ALLOWED_HOSTS = env.list(
     default=[
         "localhost",
         "127.0.0.1",
-        "https://mtali-agro-final.onrender.com",
+        "mtali-agro-final.onrender.com",
     ],
 )
 
