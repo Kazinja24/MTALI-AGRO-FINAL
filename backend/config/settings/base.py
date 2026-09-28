@@ -1,6 +1,6 @@
+from datetime import timedelta
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
-from datetime import timedelta
 
 import environ
 from django.core.exceptions import ImproperlyConfigured
@@ -20,7 +20,9 @@ environ.Env.read_env(BASE_DIR / ".env")
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env("DJANGO_SECRET_KEY", default=env("SECRET_KEY", default=""))
 if not SECRET_KEY:
-    raise ImproperlyConfigured("Set DJANGO_SECRET_KEY or SECRET_KEY in the environment.")
+    raise ImproperlyConfigured(
+        "Set DJANGO_SECRET_KEY or SECRET_KEY in the environment."
+    )
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DJANGO_DEBUG", default=env.bool("DEBUG", default=False))
@@ -30,7 +32,7 @@ ALLOWED_HOSTS = env.list(
     default=[
         "localhost",
         "127.0.0.1",
-        "mtali-agro-final-production.up.railway.app",
+        "https://mtali-agro-final.onrender.com",
     ],
 )
 
@@ -47,10 +49,7 @@ def _database_from_url(database_url: str) -> dict:
         "HOST": parsed.hostname or "",
         "PORT": str(parsed.port or ""),
         "CONN_MAX_AGE": env.int("DB_CONN_MAX_AGE", default=0),
-        "OPTIONS": {
-            key: values[-1]
-            for key, values in query.items()
-        },
+        "OPTIONS": {key: values[-1] for key, values in query.items()},
     }
 
 
@@ -224,9 +223,11 @@ DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="no-reply@example.com")
 CONTACT_NOTIFY_EMAIL = env("CONTACT_NOTIFY_EMAIL", default=DEFAULT_FROM_EMAIL)
 EMAIL_BACKEND = env(
     "EMAIL_BACKEND",
-    default="django.core.mail.backends.console.EmailBackend"
-    if DEBUG
-    else "django.core.mail.backends.smtp.EmailBackend",
+    default=(
+        "django.core.mail.backends.console.EmailBackend"
+        if DEBUG
+        else "django.core.mail.backends.smtp.EmailBackend"
+    ),
 )
 
 
