@@ -3,7 +3,7 @@ from django.core.exceptions import ImproperlyConfigured
 
 DEBUG = False
 
-if not env("DATABASE_URL", default="").strip():
+if not env("DATABASE_URL", default="").strip().strip("\"'"):
     raise ImproperlyConfigured(
         "Set DATABASE_URL to a reachable PostgreSQL database in production."
     )

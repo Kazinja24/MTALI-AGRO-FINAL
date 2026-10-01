@@ -123,7 +123,7 @@ DATABASES = {
     }
 }
 
-database_url = env("DATABASE_URL", default="")
+database_url = env("DATABASE_URL", default="").strip().strip("\"'")
 if database_url:
     DATABASES["default"] = _database_from_url(database_url)
 
