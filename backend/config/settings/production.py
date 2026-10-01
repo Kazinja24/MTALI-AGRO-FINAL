@@ -15,7 +15,12 @@ ALLOWED_HOSTS = env.list(
     default=["mtali-agro-final.onrender.com"],
 )
 CORS_ALLOW_ALL_ORIGINS = False
-CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default=[])
+CORS_ALLOWED_ORIGINS = [
+    *env.list("CORS_ALLOWED_ORIGINS", default=[]),
+    # Keep the active Vercel deployment working even when Render has a stale
+    # CORS_ALLOWED_ORIGIN_REGEXES value configured in its environment.
+    "https://mtali-agro-final-k24-gy0nnr579-azamabubaka511-2726s-projects.vercel.app",
+]
 CORS_ALLOWED_ORIGIN_REGEXES = env.list(
     "CORS_ALLOWED_ORIGIN_REGEXES",
     default=[
@@ -23,7 +28,10 @@ CORS_ALLOWED_ORIGIN_REGEXES = env.list(
         r"^https://mtali-agro-final-k24-[a-z0-9-]+-azamabubaka511-2726s-projects\.vercel\.app$",
     ],
 )
-CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=CORS_ALLOWED_ORIGINS)
+CSRF_TRUSTED_ORIGINS = [
+    *env.list("CSRF_TRUSTED_ORIGINS", default=[]),
+    *CORS_ALLOWED_ORIGINS,
+]
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SESSION_COOKIE_SECURE = env.bool("SESSION_COOKIE_SECURE", default=True)
