@@ -66,10 +66,6 @@ class MeView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        # Debug: log the Authorization header to help diagnose auth issues
-        auth_header = request.META.get("HTTP_AUTHORIZATION")
-        print("[DEBUG] Authorization header:", auth_header)
-
         serializer = UserSerializer(request.user)
 
         return Response(serializer.data)
