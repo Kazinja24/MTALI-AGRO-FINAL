@@ -11,7 +11,5 @@ services:
     envVars:
       - key: DJANGO_SECRET_KEY
         value: ""
-      - key: DATABASE_URL
-        value: ""
       - key: CLOUDINARY_URL
         value: ""

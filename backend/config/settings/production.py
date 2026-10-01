@@ -1,6 +1,12 @@
 from .base import *  # noqa: F401,F403
+from django.core.exceptions import ImproperlyConfigured
 
 DEBUG = False
+
+if not env("DATABASE_URL", default="").strip():
+    raise ImproperlyConfigured(
+        "Set DATABASE_URL to a reachable PostgreSQL database in production."
+    )
 
 # Render sends requests with this hostname.  Set ALLOWED_HOSTS in the service
 # environment to replace this default when adding a custom domain.
